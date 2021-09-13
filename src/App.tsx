@@ -1,26 +1,102 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { observer } from 'mobx-react'
+import React from 'react'
+import ReactJson from 'react-json-view'
+import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
+import styled from 'styled-components'
+import { FilesPage, PeersPage } from './pages'
+import { store } from './util'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const Wrapper = styled.div`
+    background: #f5f5fb;
+    padding: 3rem;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
 
-export default App;
+    header {
+        margin-bottom: 3rem;
+
+        .title {
+            font-weight: 700;
+            display: flex;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .node-id {
+            display: flex;
+            color: #474747;
+            font-size: 0.85rem;
+        }
+
+        nav {
+            font-weight: 700;
+            background: black;
+            padding: 1rem;
+            margin-top: 2rem;
+
+            a {
+                color: white;
+                padding: 0.5rem 1rem;
+                font-size: 1.25rem;
+                text-decoration: none;
+            }
+
+            a.active {
+                color: #84bdff;
+            }
+        }
+    }
+
+    main {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .page-body {
+        background: white;
+        padding: 2rem;
+        overflow-y: auto;
+        height: 100%;
+    }
+`
+
+export const App: React.FC = observer(() => {
+    const nodeId = store.nodeId
+
+    return (
+        <BrowserRouter>
+            <Wrapper>
+                <header>
+                    {/* <span className="title">CrowdStore</span> */}
+                    <code className="node-id">NodeID : {nodeId}</code>
+                    <nav>
+                        <NavLink exact to="/">
+                            Files
+                        </NavLink>
+                        <NavLink to="/peers">Peers</NavLink>
+                        <NavLink to="/blockchain">Blockchain</NavLink>
+                        <NavLink to="/file-ledger">File Ledger</NavLink>
+                    </nav>
+                </header>
+                <main>
+                    <Switch>
+                        <Route exact path="/" component={FilesPage} />
+                        <Route exact path="/peers" component={PeersPage} />
+                        <Route exact path="/blockchain">
+                            <div className="page-body">
+                                <ReactJson src={store.blockchain ?? {}} />
+                            </div>
+                        </Route>
+                        <Route exact path="/file-ledger">
+                            <div className="page-body">
+                                <ReactJson src={store.fileLedger ?? {}} />
+                            </div>
+                        </Route>
+                    </Switch>
+                </main>
+            </Wrapper>
+        </BrowserRouter>
+    )
+})
