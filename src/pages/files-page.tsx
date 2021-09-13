@@ -34,6 +34,7 @@ const Wrapper = styled.div`
         height: 100%;
         padding: 2rem;
         overflow-y: auto;
+        flex: 1;
     }
 
     .list {
@@ -86,9 +87,13 @@ export const FilesPage: React.FC = observer(() => {
             <main>
                 <span className="title">List of files</span>
                 <div className="list">
-                    {files?.map((file, i) => (
-                        <FileComponent key={i} {...file} index={i} />
-                    ))}
+                    {files?.length ? (
+                        files.map((file, i) => (
+                            <FileComponent key={i} {...file} index={i} />
+                        ))
+                    ) : (
+                        <span>You have no uploaded files</span>
+                    )}
                 </div>
             </main>
         </Wrapper>

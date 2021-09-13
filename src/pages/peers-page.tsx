@@ -35,6 +35,7 @@ const Wrapper = styled.div`
         height: 100%;
         padding: 2rem;
         overflow-y: auto;
+        flex: 1;
     }
 
     .list {
@@ -94,9 +95,13 @@ export const PeersPage: React.FC = observer(() => {
             <main>
                 <span className="title">List of peers</span>
                 <div className="list">
-                    {peers.map(([id, address], i) => (
-                        <Peer key={i} id={id} address={address} />
-                    ))}
+                    {peers.length ? (
+                        peers.map(([id, address], i) => (
+                            <Peer key={i} id={id} address={address} />
+                        ))
+                    ) : (
+                        <span>You have no peers</span>
+                    )}
                 </div>
             </main>
         </Wrapper>

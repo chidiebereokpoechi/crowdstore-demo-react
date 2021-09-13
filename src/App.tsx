@@ -14,7 +14,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
 
-    header {
+    > header {
         margin-bottom: 3rem;
 
         .title {
@@ -33,6 +33,7 @@ const Wrapper = styled.div`
         nav {
             font-weight: 700;
             background: black;
+            display: flex;
             padding: 1rem;
             margin-top: 2rem;
 
@@ -47,11 +48,22 @@ const Wrapper = styled.div`
                 color: #84bdff;
             }
         }
+
+        nav main {
+            flex: 1;
+        }
     }
 
-    main {
+    > main {
         flex: 1;
         overflow: hidden;
+    }
+
+    .title {
+        display: flex;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        font-size: 125%;
     }
 
     .page-body {
@@ -72,12 +84,23 @@ export const App: React.FC = observer(() => {
                     {/* <span className="title">CrowdStore</span> */}
                     <code className="node-id">NodeID : {nodeId}</code>
                     <nav>
-                        <NavLink exact to="/">
-                            Files
-                        </NavLink>
-                        <NavLink to="/peers">Peers</NavLink>
-                        <NavLink to="/blockchain">Blockchain</NavLink>
-                        <NavLink to="/file-ledger">File Ledger</NavLink>
+                        <main className="main">
+                            <NavLink exact to="/">
+                                Files
+                            </NavLink>
+                            <NavLink to="/peers">Peers</NavLink>
+                            <NavLink to="/blockchain">Blockchain</NavLink>
+                            <NavLink to="/file-ledger">File Ledger</NavLink>
+                        </main>
+                        <section className="end">
+                            <button
+                                onClick={() => {
+                                    store.refresh()
+                                }}
+                            >
+                                <span>Refresh</span>
+                            </button>
+                        </section>
                     </nav>
                 </header>
                 <main>
@@ -86,11 +109,13 @@ export const App: React.FC = observer(() => {
                         <Route exact path="/peers" component={PeersPage} />
                         <Route exact path="/blockchain">
                             <div className="page-body">
+                                <span className="title">Blockchain</span>
                                 <ReactJson src={store.blockchain ?? {}} />
                             </div>
                         </Route>
                         <Route exact path="/file-ledger">
                             <div className="page-body">
+                                <span className="title">File Ledger</span>
                                 <ReactJson src={store.fileLedger ?? {}} />
                             </div>
                         </Route>
